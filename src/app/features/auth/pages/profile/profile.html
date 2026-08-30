@@ -6,8 +6,8 @@
       <div class="card-body">
         <h2 class="h5 mb-3">Avatar</h2>
         @if (u.avatarUrl) {
-          <img [src]="u.avatarUrl" class="img-thumbnail mb-3 d-block" style="max-height: 120px;" />
-        }
+            <img [src]="apiOrigin + u.avatarUrl" class="img-thumbnail mb-3 d-block" style="max-height: 120px;" />
+          }
         <app-file-upload [uploadUrl]="avatarUploadUrl" accept="image/png,image/jpeg,image/webp" (uploaded)="onAvatarUploaded()" />
       </div>
     </div>
