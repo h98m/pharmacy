@@ -1,0 +1,156 @@
+<div class="container-fluid p-4">
+  <h1 class="h3 mb-4">Point of Sale</h1>
+
+  @if (completedSale(); as sale) {
+    <div class="card">
+      <div class="card-body text-center py-5">
+        <h2 class="h4 mb-3">Sale Completed</h2>
+        <p class="mb-1">Invoice: <strong>{{ sale.invoiceNumber }}</strong></p>
+        <p class="mb-3">Total: <strong>{{ sale.total | currency:'USD' }}</strong></p>
+        <button type="button" class="btn btn-primary" (click)="startNewSale()">Start New Sale</button>
+      </div>
+    </div>
+  } @else {
+    <div class="row g-4">
+      <div class="col-md-7">
+        <div class="mb-3">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search medicine by name or barcode..."
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange()"
+          />
+        </div>
+
+        @if (searchResults().length > 0) {
+          <ul class="list-group mb-4">
+            @for (medicine of searchResults(); track medicine.id) {
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <div>{{ medicine.name }}</div>
+                  <small class="text-muted">{{ medicine.price | currency:'USD' }} — Stock: {{ medicine.stockQuantity }}</small>
+                </div>
+                <button type="button" class="btn btn-outline-primary btn-sm" (click)="addToCart(medicine)">
+                  Add
+                </button>
+              </li>
+            }
+          </ul>
+        }
+
+        <h2 class="h5 mb-3">Cart</h2>
+        @if (cart().length === 0) {
+          <p class="text-muted">No items yet. Search and add medicines above.</p>
+        } @else {
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Medicine</th>
+                <th>Qty</th>
+                <th>Unit Price</th>
+                <th>Line Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (line of cart(); track line.medicine.id) {
+                <tr>
+                  <td>{{ line.medicine.name }}</td>
+                  <td style="width: 90px;">
+                    <input
+                      type="number"
+                      class="form-control form-control-sm"
+                      [ngModel]="line.quantity"
+                      (ngModelChange)="updateQuantity(line.medicine.id, $event)"
+                      min="1"
+                    />
+                  </td>
+                  <td>{{ line.medicine.price | currency:'USD' }}</td>
+                  <td>{{ line.medicine.price * line.quantity | currency:'USD' }}</td>
+                  <td>
+                    <button type="button" class="btn btn-outline-danger btn-sm" (click)="removeFromCart(line.medicine.id)">
+                      Remove
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </div>
+
+      <div class="col-md-5">
+        <div class="card">
+          <div class="card-body">
+            <div class="mb-3">
+              <label class="form-label">Customer (optional)</label>
+              <select class="form-select" [(ngModel)]="customerId">
+                <option value="">Walk-in customer</option>
+                @for (customer of customers(); track customer.id) {
+                  <option [value]="customer.id">{{ customer.fullName }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label class="form-label">Discount</label>
+                <input type="number" class="form-control" [(ngModel)]="discount" min="0" />
+              </div>
+              <div class="col-6">
+                <label class="form-label">Tax Rate (%)</label>
+                <input type="number" class="form-control" [(ngModel)]="taxRate" min="0" />
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Payment Method</label>
+              <select class="form-select" [(ngModel)]="paymentMethod">
+                <option value="cash">Cash</option>
+                <option value="card">Card</option>
+                <option value="insurance">Insurance</option>
+              </select>
+            </div>
+
+            @if (requiresPrescription()) {
+              <div class="mb-3">
+                <label class="form-label">Prescription (required)</label>
+                <app-file-upload [uploadUrl]="fileUploadUrl" (uploaded)="onPrescriptionUploaded($event)" />
+                @if (prescriptionUrl) {
+                  <div class="text-success small">Prescription uploaded.</div>
+                }
+              </div>
+            }
+
+            <hr />
+
+            <div class="d-flex justify-content-between">
+              <span>Subtotal</span>
+              <span>{{ subtotal() | currency:'USD' }}</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span>Discount</span>
+              <span>-{{ discount | currency:'USD' }}</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span>Tax</span>
+              <span>{{ tax() | currency:'USD' }}</span>
+            </div>
+            <div class="d-flex justify-content-between fw-bold fs-5 mt-2">
+              <span>Total</span>
+              <span>{{ total() | currency:'USD' }}</span>
+            </div>
+
+            <button type="button" class="btn btn-primary w-100 mt-3" [disabled]="loading()" (click)="completeSale()">
+              @if (loading()) {
+                <span class="spinner-border spinner-border-sm me-2"></span>
+              }
+              Complete Sale
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

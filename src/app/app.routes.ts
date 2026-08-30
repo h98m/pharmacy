@@ -58,6 +58,12 @@ export const routes: Routes = [
     canActivate: [hasPermission('customers.read')],
   },
   {
+  path: 'pos',
+  loadComponent: () =>
+    import('./features/sales/pages/point-of-sale/point-of-sale').then((m) => m.PointOfSale),
+  canActivate: [hasPermission('sales.create')],
+},
+  {
     path: 'forbidden',
     loadComponent: () =>
       import('./shared/components/forbidden-page/forbidden-page').then((m) => m.ForbiddenPage),
