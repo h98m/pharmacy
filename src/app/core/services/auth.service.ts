@@ -2,7 +2,7 @@ import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, of, map, catchError } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { LoginResponse, User } from '../models/user.model';
+import { AuthTokens, LoginResponse, User } from '../models/user.model';
 
 const ACCESS_TOKEN_KEY = 'pharmacy_access_token';
 const REFRESH_TOKEN_KEY = 'pharmacy_refresh_token';
@@ -34,7 +34,39 @@ export class AuthService {
       localStorage.removeItem(REFRESH_TOKEN_KEY);
       this._user.set(null);
     }
+    refresh(): Observable<AuthTokens> {
+      return this.http
+        .post<AuthTokens>(`${this.baseUrl}/refresh`, { refreshToken: this.refreshToken })
+        .pipe(tap((tokens) => this.storeTokens(tokens)));
+    }
 
+    updateProfile(fullName: string, phone: string): Observable<User> {
+      return this.http
+        .patch<User>(`${this.baseUrl}/me`, { fullName, phone })
+        .pipe(tap((user) => this._user.set(user)));
+    }
+
+    uploadAvatar(file: File): Observable<User> {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      return this.http
+        .post<User>(`${this.baseUrl}/me/avatar`, formData)
+        .pipe(tap((user) => this._user.set(user)));
+    }
+
+    changePassword(currentPassword: string, newPassword: string): Observable<void> {
+      return this.http.post<void>(`${this.baseUrl}/change-password`, { currentPassword, newPassword });
+    }
+
+    get refreshToken(): string | null {
+      return localStorage.getItem(REFRESH_TOKEN_KEY);
+    }
+
+    private storeTokens(tokens: AuthTokens): void {
+      localStorage.setItem(ACCESS_TOKEN_KEY, tokens.accessToken);
+      localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refreshToken);
+    }
     me(): Observable<User> {
       return this.http
         .get<User>(`${this.baseUrl}/me`)
