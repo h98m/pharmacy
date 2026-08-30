@@ -1,0 +1,32 @@
+<div class="modal d-block" tabindex="-1" style="background: rgba(0, 0, 0, 0.5);">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Adjust Stock — {{ medicine.name }}</h5>
+        <button type="button" class="btn-close" (click)="cancel()"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted">Current stock: {{ medicine.stockQuantity }}</p>
+
+        <div class="mb-3">
+          <label class="form-label">Change (use a negative number to decrease)</label>
+          <input type="number" class="form-control" [(ngModel)]="change" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Reason</label>
+          <input type="text" class="form-control" [(ngModel)]="reason" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+        <button type="button" class="btn btn-primary" [disabled]="loading()" (click)="submit()">
+          @if (loading()) {
+            <span class="spinner-border spinner-border-sm me-2"></span>
+          }
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,10 @@
 <div class="container-fluid p-4">
-  <h1 class="h3 mb-4">Medicines</h1>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Medicines</h1>
+    <a *appHasPermission="'medicines.create'" routerLink="/medicines/new" class="btn btn-primary">
+      New Medicine
+    </a>
+  </div>
 
   <div class="row g-2 mb-3">
     <div class="col-md-6">
@@ -25,7 +30,25 @@
     </div>
   </div>
 
-  <app-data-table [columns]="columns" [rows]="medicines()" [loading]="loading()" />
+  <app-data-table [columns]="columns" [rows]="medicines()" [loading]="loading()">
+  <ng-template #actions let-medicine>
+    <div class="d-flex gap-2 justify-content-end">
+      <a *appHasPermission="'medicines.update'" [routerLink]="['/medicines', medicine.id]" class="btn btn-outline-secondary btn-sm">
+        Edit
+      </a>
+      <button *appHasPermission="'medicines.stock'" type="button" class="btn btn-outline-primary btn-sm" (click)="openStockAdjust(medicine)">
+        Stock
+      </button>
+      <button *appHasPermission="'medicines.delete'" type="button" class="btn btn-outline-danger btn-sm" (click)="deleteMedicine(medicine)">
+        Delete
+      </button>
+    </div>
+  </ng-template>
+</app-data-table>
+
+@if (stockAdjustTarget(); as m) {
+  <app-stock-adjust-dialog [medicine]="m" (adjusted)="onStockAdjusted($event)" (closed)="closeStockAdjust()" />
+}
 
   @if (totalPages() > 1) {
     <nav class="mt-3">

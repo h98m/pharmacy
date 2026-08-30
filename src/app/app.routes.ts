@@ -27,6 +27,18 @@ export const routes: Routes = [
         import('./features/medicines/pages/medicine-list/medicine-list').then((m) => m.MedicineList),
       canActivate: [hasPermission('medicines.read')],
     },
+    {
+      path: 'medicines/new',
+      loadComponent: () =>
+        import('./features/medicines/pages/medicine-form/medicine-form').then((m) => m.MedicineForm),
+      canActivate: [hasPermission('medicines.create')],
+    },
+    {
+      path: 'medicines/:id',
+      loadComponent: () =>
+        import('./features/medicines/pages/medicine-form/medicine-form').then((m) => m.MedicineForm),
+      canActivate: [hasPermission('medicines.update')],
+    },
   {
     path: 'forbidden',
     loadComponent: () =>

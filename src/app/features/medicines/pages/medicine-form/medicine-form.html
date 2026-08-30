@@ -1,0 +1,81 @@
+<div class="container-fluid p-4" style="max-width: 700px;">
+  <h1 class="h3 mb-4">{{ medicineId() ? 'Edit Medicine' : 'New Medicine' }}</h1>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Name</label>
+        <input type="text" class="form-control" formControlName="name" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Generic Name</label>
+        <input type="text" class="form-control" formControlName="genericName" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Barcode</label>
+        <input type="text" class="form-control" formControlName="barcode" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Batch Number</label>
+        <input type="text" class="form-control" formControlName="batchNumber" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Category ID</label>
+        <input type="text" class="form-control" formControlName="categoryId" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Supplier ID</label>
+        <input type="text" class="form-control" formControlName="supplierId" />
+      </div>
+      <div class="col-12">
+        <label class="form-label">Description</label>
+        <textarea class="form-control" formControlName="description" rows="2"></textarea>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Price</label>
+        <input type="number" class="form-control" formControlName="price" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Cost Price</label>
+        <input type="number" class="form-control" formControlName="costPrice" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Stock Quantity</label>
+        <input type="number" class="form-control" formControlName="stockQuantity" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Reorder Level</label>
+        <input type="number" class="form-control" formControlName="reorderLevel" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Expiry Date</label>
+        <input type="date" class="form-control" formControlName="expiryDate" />
+      </div>
+      <div class="col-md-6">
+        <div class="form-check mt-4">
+          <input type="checkbox" class="form-check-input" id="requiresPrescription" formControlName="requiresPrescription" />
+          <label class="form-check-label" for="requiresPrescription">Requires Prescription</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-check mt-4">
+          <input type="checkbox" class="form-check-input" id="isActive" formControlName="isActive" />
+          <label class="form-check-label" for="isActive">Active</label>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-4" [disabled]="loading()">
+      @if (loading()) {
+        <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+      }
+      Save
+    </button>
+  </form>
+
+  @if (imageUploadUrl(); as url) {
+    <hr class="my-4" />
+    <h2 class="h5 mb-3">Photo</h2>
+    <app-file-upload [uploadUrl]="url" accept="image/png,image/jpeg,image/webp,image/gif" />
+  }
+</div>
