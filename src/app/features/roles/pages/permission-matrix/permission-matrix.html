@@ -1,0 +1,80 @@
+<div class="container-fluid p-4">
+  <h1 class="h3 mb-4">Roles &amp; Permissions</h1>
+
+  @if (loading()) {
+    <div class="d-flex justify-content-center py-5">
+      <div class="spinner-border" role="status"></div>
+    </div>
+  } @else if (catalogue(); as cat) {
+    @if (!canManage) {
+      <div class="alert alert-info">You can view this page, but you don't have permission to change roles.</div>
+    }
+
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle">
+        <thead>
+          <tr>
+            <th style="min-width: 220px;">Permission</th>
+            @for (role of displayedRoles(); track role.name) {
+              <th class="text-center text-capitalize">{{ role.name }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (group of cat.groups; track group) {
+            <tr class="table-secondary">
+              <td [attr.colspan]="displayedRoles().length + 1" class="fw-bold text-capitalize">{{ group }}</td>
+            </tr>
+            @for (permission of permissionsInGroup(group); track permission.key) {
+              <tr>
+                <td>{{ permission.description }}</td>
+                @for (role of displayedRoles(); track role.name) {
+                  <td class="text-center">
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      [checked]="isChecked(role.name, permission.key)"
+                      [disabled]="!canManage"
+                      (change)="toggle(role, permission.key)"
+                    />
+                  </td>
+                }
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="d-flex gap-3 flex-wrap">
+      @for (role of displayedRoles(); track role.name) {
+        @if (canManage) {
+          <div class="card" style="width: 260px;">
+            <div class="card-body">
+              <h6 class="card-title text-capitalize">{{ role.name }}</h6>
+              <p class="text-muted small mb-2">{{ role.userCount }} user(s)</p>
+              <div class="d-flex gap-2">
+                <button
+                  type="button"
+                  class="btn btn-primary btn-sm"
+                  [disabled]="!hasChanges(role) || savingRole() === role.name"
+                  (click)="save(role)"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary btn-sm"
+                  [disabled]="!role.isModified || savingRole() === role.name"
+                  (click)="resetToDefaults(role)"
+                >
+                  Reset to Defaults
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      }
+    </div>
+  }
+</div>
