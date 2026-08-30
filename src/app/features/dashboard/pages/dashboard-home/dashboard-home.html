@@ -1,0 +1,132 @@
+<div class="container-fluid p-4">
+  <h1 class="h3 mb-4">Dashboard</h1>
+
+  @if (loading()) {
+    <div class="d-flex justify-content-center py-5">
+      <div class="spinner-border" role="status"></div>
+    </div>
+  } @else if (stats(); as s) {
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-md-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <div class="fs-4 fw-bold">{{ s.totals.medicines }}</div>
+            <div class="text-muted small">Medicines</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <div class="fs-4 fw-bold">{{ s.totals.categories }}</div>
+            <div class="text-muted small">Categories</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <div class="fs-4 fw-bold">{{ s.totals.suppliers }}</div>
+            <div class="text-muted small">Suppliers</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <div class="fs-4 fw-bold">{{ s.totals.customers }}</div>
+            <div class="text-muted small">Customers</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card text-center border-warning">
+          <div class="card-body">
+            <div class="fs-4 fw-bold">{{ s.totals.lowStock }}</div>
+            <div class="text-muted small">Low Stock</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card text-center border-warning">
+          <div class="card-body">
+            <div class="fs-4 fw-bold">{{ s.totals.expiringSoon }}</div>
+            <div class="text-muted small">Expiring Soon</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card text-center border-danger">
+          <div class="card-body">
+            <div class="fs-4 fw-bold">{{ s.totals.outOfStock }}</div>
+            <div class="text-muted small">Out of Stock</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-md-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <div class="fs-4 fw-bold">{{ s.revenue.today }}</div>
+            <div class="text-muted small">Revenue Today</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <div class="fs-4 fw-bold">{{ s.revenue.thisMonth }}</div>
+            <div class="text-muted small">Revenue This Month</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <div class="fs-4 fw-bold">{{ s.revenue.salesToday }}</div>
+            <div class="text-muted small">Sales Today</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <div class="fs-4 fw-bold">{{ s.revenue.averageBasket }}</div>
+            <div class="text-muted small">Average Basket</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="card">
+          <div class="card-header">Top Selling Medicines</div>
+          <ul class="list-group list-group-flush">
+            @for (item of s.topSelling; track item.medicineId) {
+              <li class="list-group-item d-flex justify-content-between">
+                <span>{{ item.name }}</span>
+                <span class="text-muted">{{ item.quantity }} sold</span>
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="card">
+          <div class="card-header">Stock by Category</div>
+          <ul class="list-group list-group-flush">
+            @for (item of s.stockByCategory; track item.categoryId) {
+              <li class="list-group-item d-flex justify-content-between">
+                <span>{{ item.name }}</span>
+                <span class="text-muted">{{ item.stock }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+  }
+</div>

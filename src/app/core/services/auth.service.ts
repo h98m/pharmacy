@@ -1,6 +1,6 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, of, map, catchError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoginResponse, User } from '../models/user.model';
 
@@ -28,12 +28,35 @@ export class AuthService {
         .post<LoginResponse>(`${this.baseUrl}/register`, { fullName, email, password, phone: phone ?? '' })
         .pipe(tap((res) => this.storeSession(res)));
     }
-    
+
     logout(): void {
       localStorage.removeItem(ACCESS_TOKEN_KEY);
       localStorage.removeItem(REFRESH_TOKEN_KEY);
       this._user.set(null);
     }
+
+    me(): Observable<User> {
+      return this.http
+        .get<User>(`${this.baseUrl}/me`)
+        .pipe(tap((user) => this._user.set(user)));
+    }
+    ensureSession(): Observable<boolean> {
+      if (this.isLoggedIn()) {
+        return of(true);
+      }
+      if (!this.accessToken) {
+        return of(false);
+      }
+      return this.me().pipe(
+        map(() => true),
+        catchError(() => of(false)),
+      );
+    }
+
+    get accessToken(): string | null {
+      return localStorage.getItem(ACCESS_TOKEN_KEY);
+    }
+
   private storeSession(res: LoginResponse): void {
     localStorage.setItem(ACCESS_TOKEN_KEY, res.accessToken);
     localStorage.setItem(REFRESH_TOKEN_KEY, res.refreshToken);
