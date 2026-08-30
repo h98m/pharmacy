@@ -25,6 +25,8 @@ export class MedicineForm implements OnInit {
   private readonly categoriesService = inject(CategoriesService);
   private readonly suppliersService = inject(SuppliersService);
 
+  readonly apiOrigin = environment.apiUrl.replace(/\/api$/, '');
+  readonly currentImageUrl = signal<string | null>(null);
   readonly categories = signal<Category[]>([]);
   readonly suppliers = signal<Supplier[]>([]);
   readonly medicineId = signal<string | null>(this.route.snapshot.paramMap.get('id'));
@@ -49,7 +51,9 @@ export class MedicineForm implements OnInit {
     requiresPrescription: [false],
     isActive: [true],
   });
-
+onPhotoUploaded(medicine: unknown): void {
+  this.currentImageUrl.set((medicine as { imageUrl: string }).imageUrl);
+}
 ngOnInit(): void {
   this.categoriesService.list({ pageSize: 100 }).subscribe({
     next: (result) => this.categories.set(result.items),
@@ -62,7 +66,10 @@ ngOnInit(): void {
   const id = this.medicineId();
   if (id) {
     this.medicinesService.getOne(id).subscribe({
-      next: (medicine) => this.form.patchValue(medicine),
+      next: (medicine) => {
+        this.form.patchValue(medicine);
+        this.currentImageUrl.set(medicine.imageUrl || null);
+      },
       error: (err) => {
         this.notificationService.error(err.error?.error?.message ?? 'Failed to load medicine.');
       },

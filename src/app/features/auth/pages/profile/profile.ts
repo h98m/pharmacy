@@ -25,7 +25,7 @@ export class Profile {
 
   readonly user = this.authService.user;
   readonly avatarUploadUrl = `${environment.apiUrl}/auth/me/avatar`;
-
+  readonly apiOrigin = environment.apiUrl.replace(/\/api$/, '');
   readonly savingProfile = signal(false);
   readonly savingPassword = signal(false);
 

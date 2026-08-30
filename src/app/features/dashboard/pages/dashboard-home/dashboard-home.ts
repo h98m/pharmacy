@@ -2,10 +2,12 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardStats } from '../../../../core/models/dashboard-stats.model';
 import { NotificationService } from '../../../../core/services/notification.service';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard-home',
   standalone: true,
+  imports: [CurrencyPipe],
   templateUrl: './dashboard-home.html',
   styleUrl: './dashboard-home.scss',
 })

@@ -1,42 +1,48 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary px-3">
   <span class="navbar-brand">Pharmacy</span>
 
-<div class="d-flex gap-3">
-  <a *appHasPermission="'dashboard.read'" routerLink="/dashboard" class="nav-link text-light">
-    Dashboard
-  </a>
-  <a *appHasPermission="'medicines.read'" routerLink="/medicines" class="nav-link text-light">
-    Medicines
-  </a>
-  <a *appHasPermission="'categories.read'" routerLink="/categories" class="nav-link text-light">
-    Categories
-  </a>
-  <a *appHasPermission="'suppliers.read'" routerLink="/suppliers" class="nav-link text-light">
-    Suppliers
-  </a>
-  <a *appHasPermission="'customers.read'" routerLink="/customers" class="nav-link text-light">
-    Customers
-  </a>
-  <a *appHasPermission="'sales.create'" routerLink="/pos" class="nav-link text-light">
-  Point of Sale
-</a>
-<a *appHasPermission="'sales.read'" routerLink="/sales" class="nav-link text-light">
-  Sales History
-</a>
-  <a *appHasPermission="'roles.read'" routerLink="/roles" class="nav-link text-light">
-    Roles
-  </a>
-  <a routerLink="/auth/profile" class="nav-link text-light">
-  Profile
-</a>
-</div>
+  <button type="button" class="navbar-toggler" (click)="toggleMenu()" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
-  <div class="ms-auto d-flex align-items-center gap-3">
-    @if (user(); as u) {
-      <span class="text-light">{{ u.fullName }}</span>
-    }
-    <button type="button" class="btn btn-outline-light btn-sm" (click)="logout()">
-      Sign Out
-    </button>
+  <div class="collapse navbar-collapse" [class.show]="menuOpen()">
+    <div class="d-flex flex-column flex-lg-row gap-2 gap-lg-3">
+      <a *appHasPermission="'dashboard.read'" routerLink="/dashboard" class="nav-link text-light" (click)="closeMenu()">
+        Dashboard
+      </a>
+      <a *appHasPermission="'medicines.read'" routerLink="/medicines" class="nav-link text-light" (click)="closeMenu()">
+        Medicines
+      </a>
+      <a *appHasPermission="'categories.read'" routerLink="/categories" class="nav-link text-light" (click)="closeMenu()">
+        Categories
+      </a>
+      <a *appHasPermission="'suppliers.read'" routerLink="/suppliers" class="nav-link text-light" (click)="closeMenu()">
+        Suppliers
+      </a>
+      <a *appHasPermission="'customers.read'" routerLink="/customers" class="nav-link text-light" (click)="closeMenu()">
+        Customers
+      </a>
+      <a *appHasPermission="'sales.create'" routerLink="/pos" class="nav-link text-light" (click)="closeMenu()">
+        Point of Sale
+      </a>
+      <a *appHasPermission="'sales.read'" routerLink="/sales" class="nav-link text-light" (click)="closeMenu()">
+        Sales History
+      </a>
+      <a *appHasPermission="'roles.read'" routerLink="/roles" class="nav-link text-light" (click)="closeMenu()">
+        Roles
+      </a>
+      <a routerLink="/auth/profile" class="nav-link text-light" (click)="closeMenu()">
+        Profile
+      </a>
+    </div>
+
+    <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-2 gap-lg-3 ms-lg-auto mt-3 mt-lg-0">
+      @if (user(); as u) {
+        <span class="text-light">{{ u.fullName }}</span>
+      }
+      <button type="button" class="btn btn-outline-light btn-sm" (click)="logout()">
+        Sign Out
+      </button>
+    </div>
   </div>
 </nav>

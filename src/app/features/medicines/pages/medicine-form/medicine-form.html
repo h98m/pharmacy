@@ -83,9 +83,12 @@
     </button>
   </form>
 
-  @if (imageUploadUrl(); as url) {
-    <hr class="my-4" />
-    <h2 class="h5 mb-3">Photo</h2>
-    <app-file-upload [uploadUrl]="url" accept="image/png,image/jpeg,image/webp,image/gif" />
+@if (imageUploadUrl(); as url) {
+  <hr class="my-4" />
+  <h2 class="h5 mb-3">Photo</h2>
+  @if (currentImageUrl(); as img) {
+    <img [src]="apiOrigin + img" class="img-thumbnail mb-3 d-block" style="max-height: 150px;" />
   }
+  <app-file-upload [uploadUrl]="url" accept="image/png,image/jpeg,image/webp,image/gif" (uploaded)="onPhotoUploaded($event)" />
+}
 </div>
