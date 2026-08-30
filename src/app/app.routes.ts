@@ -20,6 +20,12 @@ export const routes: Routes = [
       import('./features/dashboard/pages/dashboard-home/dashboard-home').then((m) => m.DashboardHome),
     canActivate: [authGuard],
   },
+    {
+    path: 'medicines',
+    loadComponent: () =>
+      import('./features/medicines/pages/medicine-list/medicine-list').then((m) => m.MedicineList),
+    canActivate: [authGuard],
+  },
   {
     path: 'forbidden',
     loadComponent: () =>

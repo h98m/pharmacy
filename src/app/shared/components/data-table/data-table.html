@@ -1,0 +1,48 @@
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead>
+      <tr>
+        @for (col of columns; track col.key) {
+          <th>{{ col.label }}</th>
+        }
+        @if (actionsTemplate) {
+          <th></th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @if (loading) {
+        <tr>
+          <td [attr.colspan]="columns.length + (actionsTemplate ? 1 : 0)" class="text-center py-4">
+            <div class="spinner-border spinner-border-sm" role="status"></div>
+          </td>
+        </tr>
+      } @else if (rows.length === 0) {
+        <tr>
+          <td [attr.colspan]="columns.length + (actionsTemplate ? 1 : 0)" class="text-center text-muted py-4">
+            No results found.
+          </td>
+        </tr>
+      } @else {
+        @for (row of rows; track row.id) {
+          <tr>
+            @for (col of columns; track col.key) {
+            <td>
+              @if (col.format === 'currency') {
+                {{ $any(row[col.key]) | currency }}
+              } @else {
+                {{ row[col.key] }}
+              }
+            </td>
+          }
+            @if (actionsTemplate) {
+              <td class="text-end">
+                <ng-container *ngTemplateOutlet="actionsTemplate; context: { $implicit: row }"></ng-container>
+              </td>
+            }
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>
