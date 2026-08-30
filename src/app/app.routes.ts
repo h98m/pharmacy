@@ -63,6 +63,12 @@ export const routes: Routes = [
     import('./features/sales/pages/point-of-sale/point-of-sale').then((m) => m.PointOfSale),
   canActivate: [hasPermission('sales.create')],
 },
+{
+  path: 'sales',
+  loadComponent: () =>
+    import('./features/sales/pages/sales-history/sales-history').then((m) => m.SalesHistory),
+  canActivate: [hasPermission('sales.read')],
+},
   {
     path: 'forbidden',
     loadComponent: () =>

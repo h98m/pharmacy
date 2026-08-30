@@ -1,0 +1,50 @@
+<div class="container-fluid p-4">
+  <h1 class="h3 mb-4">Sales History</h1>
+
+  <div class="row g-2 mb-3">
+    <div class="col-md-3">
+      <label class="form-label">From</label>
+      <input type="date" class="form-control" [(ngModel)]="from" (ngModelChange)="applyFilters()" />
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">To</label>
+      <input type="date" class="form-control" [(ngModel)]="to" (ngModelChange)="applyFilters()" />
+    </div>
+  </div>
+
+  <app-data-table [columns]="columns" [rows]="sales()" [loading]="loading()">
+    <ng-template #actions let-sale>
+      <div class="d-flex gap-2 justify-content-end">
+        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="viewDetails(sale)">
+          Details
+        </button>
+        @if (sale.status === 'completed') {
+          <button
+            *appHasPermission="'sales.refund'"
+            type="button"
+            class="btn btn-outline-danger btn-sm"
+            (click)="refundSale(sale)"
+          >
+            Refund
+          </button>
+        }
+      </div>
+    </ng-template>
+  </app-data-table>
+
+  @if (totalPages() > 1) {
+    <nav class="mt-3">
+      <ul class="pagination justify-content-center">
+        @for (p of pages(); track p) {
+          <li class="page-item" [class.active]="page() === p">
+            <button class="page-link" (click)="goToPage(p)">{{ p }}</button>
+          </li>
+        }
+      </ul>
+    </nav>
+  }
+
+  @if (selectedSale(); as sale) {
+    <app-sale-detail-dialog [sale]="sale" (closed)="closeDetails()" />
+  }
+</div>
