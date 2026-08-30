@@ -1,0 +1,117 @@
+<div class="d-flex justify-content-center align-items-center min-vh-100 px-3">
+  <div class="card shadow-sm" style="max-width: 400px; width: 100%;">
+    <div class="card-body p-4">
+      <h1 class="h4 mb-4 text-center">Create Account</h1>
+
+      @if (registeredAs()) {
+        <div class="alert alert-success" role="alert">
+          Account created and signed in. Welcome, {{ registeredAs() }}.
+        </div>
+      } @else {
+        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+          @if (errorMessage()) {
+            <div class="alert alert-danger" role="alert">
+              {{ errorMessage() }}
+            </div>
+          }
+
+          <div class="mb-3">
+            <label for="fullName" class="form-label">Full Name</label>
+            <input
+              id="fullName"
+              type="text"
+              class="form-control"
+              formControlName="fullName"
+              [class.is-invalid]="form.controls.fullName.invalid && form.controls.fullName.touched"
+            />
+            @if (form.controls.fullName.invalid && form.controls.fullName.touched) {
+              <div class="invalid-feedback">
+                Full name is required.
+              </div>
+            }
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input
+              id="email"
+              type="email"
+              class="form-control"
+              formControlName="email"
+              [class.is-invalid]="form.controls.email.invalid && form.controls.email.touched"
+            />
+            @if (form.controls.email.invalid && form.controls.email.touched) {
+              <div class="invalid-feedback">
+                Enter a valid email address.
+              </div>
+            }
+          </div>
+
+          <div class="mb-3">
+            <label for="phone" class="form-label">Phone <span class="text-muted">(optional)</span></label>
+            <input
+              id="phone"
+              type="tel"
+              class="form-control"
+              formControlName="phone"
+            />
+          </div>
+
+        <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-group">
+            <input
+            id="password"
+            [type]="showPassword() ? 'text' : 'password'"
+            class="form-control"
+            formControlName="password"
+            [class.is-invalid]="form.controls.password.invalid && form.controls.password.touched"
+            />
+            <button type="button" class="btn btn-outline-secondary" (click)="togglePassword()">
+            <i class="bi" [class.bi-eye]="!showPassword()" [class.bi-eye-slash]="showPassword()"></i>
+            </button>
+            @if (form.controls.password.invalid && form.controls.password.touched) {
+            <div class="invalid-feedback">
+                Password must be at least 8 characters.
+            </div>
+            }
+        </div>
+        </div>
+
+        <div class="mb-3">
+        <label for="confirmPassword" class="form-label">Confirm Password</label>
+        <div class="input-group">
+            <input
+            id="confirmPassword"
+            [type]="showConfirmPassword() ? 'text' : 'password'"
+            class="form-control"
+            formControlName="confirmPassword"
+            [class.is-invalid]="form.errors?.['passwordsMismatch'] && form.controls.confirmPassword.touched"
+            />
+            <button type="button" class="btn btn-outline-secondary" (click)="toggleConfirmPassword()">
+            <i class="bi" [class.bi-eye]="!showConfirmPassword()" [class.bi-eye-slash]="showConfirmPassword()"></i>
+            </button>
+            @if (form.errors?.['passwordsMismatch'] && form.controls.confirmPassword.touched) {
+            <div class="invalid-feedback">
+                Passwords do not match.
+            </div>
+            }
+        </div>
+        </div>
+          <button type="submit" class="btn btn-primary w-100" [disabled]="loading()">
+            @if (loading()) {
+              <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+            }
+            Create Account
+          </button>
+        </form>
+
+        <p class="text-center mt-3 mb-0">
+          Already have an account?
+          <a routerLink="/auth/login">Sign in</a>
+        </p>
+      }
+    </div>
+  </div>
+</div>
