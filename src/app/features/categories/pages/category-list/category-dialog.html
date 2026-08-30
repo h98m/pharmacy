@@ -1,0 +1,39 @@
+<div class="modal d-block" tabindex="-1" style="background: rgba(0, 0, 0, 0.5);">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ isEditMode() ? 'Edit Category' : 'New Category' }}</h5>
+        <button type="button" class="btn-close" (click)="cancel()"></button>
+      </div>
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="name"
+              [class.is-invalid]="form.controls.name.invalid && form.controls.name.touched"
+            />
+            @if (form.controls.name.invalid && form.controls.name.touched) {
+              <div class="invalid-feedback">Name is required.</div>
+            }
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" formControlName="description" rows="2"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+          <button type="submit" class="btn btn-primary" [disabled]="loading()">
+            @if (loading()) {
+              <span class="spinner-border spinner-border-sm me-2"></span>
+            }
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

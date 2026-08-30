@@ -5,7 +5,10 @@ import { MedicinesService, MedicineFormPayload } from '../../services/medicines.
 import { NotificationService } from '../../../../core/services/notification.service';
 import { FileUpload } from '../../../../shared/components/file-upload/file-upload';
 import { environment } from '../../../../../environments/environment';
-
+import { CategoriesService } from '../../../categories/services/categories.service';
+import { SuppliersService } from '../../../suppliers/services/suppliers.service';
+import { Category } from '../../../categories/models/category.model';
+import { Supplier } from '../../../suppliers/models/supplier.model';
 @Component({
   selector: 'app-medicine-form',
   standalone: true,
@@ -19,7 +22,11 @@ export class MedicineForm implements OnInit {
   private readonly notificationService = inject(NotificationService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly categoriesService = inject(CategoriesService);
+  private readonly suppliersService = inject(SuppliersService);
 
+  readonly categories = signal<Category[]>([]);
+  readonly suppliers = signal<Supplier[]>([]);
   readonly medicineId = signal<string | null>(this.route.snapshot.paramMap.get('id'));
   readonly loading = signal(false);
   readonly imageUploadUrl = computed(() =>
@@ -43,17 +50,25 @@ export class MedicineForm implements OnInit {
     isActive: [true],
   });
 
-  ngOnInit(): void {
-    const id = this.medicineId();
-    if (id) {
-      this.medicinesService.getOne(id).subscribe({
-        next: (medicine) => this.form.patchValue(medicine),
-        error: (err) => {
-          this.notificationService.error(err.error?.error?.message ?? 'Failed to load medicine.');
-        },
-      });
-    }
+ngOnInit(): void {
+  this.categoriesService.list({ pageSize: 100 }).subscribe({
+    next: (result) => this.categories.set(result.items),
+  });
+
+  this.suppliersService.list({ pageSize: 100 }).subscribe({
+    next: (result) => this.suppliers.set(result.items),
+  });
+
+  const id = this.medicineId();
+  if (id) {
+    this.medicinesService.getOne(id).subscribe({
+      next: (medicine) => this.form.patchValue(medicine),
+      error: (err) => {
+        this.notificationService.error(err.error?.error?.message ?? 'Failed to load medicine.');
+      },
+    });
   }
+}
 
   submit(): void {
     if (this.form.invalid) {

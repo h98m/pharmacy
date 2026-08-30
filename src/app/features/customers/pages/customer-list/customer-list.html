@@ -1,0 +1,47 @@
+<div class="container-fluid p-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Customers</h1>
+    <button *appHasPermission="'customers.create'" type="button" class="btn btn-primary" (click)="openCreate()">
+      New Customer
+    </button>
+  </div>
+
+  <div class="mb-3">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Search customers..."
+      [(ngModel)]="searchTerm"
+      (ngModelChange)="onSearchChange()"
+    />
+  </div>
+
+  <app-data-table [columns]="columns" [rows]="customers()" [loading]="loading()">
+    <ng-template #actions let-customer>
+      <div class="d-flex gap-2 justify-content-end">
+        <button *appHasPermission="'customers.update'" type="button" class="btn btn-outline-secondary btn-sm" (click)="openEdit(customer)">
+          Edit
+        </button>
+        <button *appHasPermission="'customers.delete'" type="button" class="btn btn-outline-danger btn-sm" (click)="deleteCustomer(customer)">
+          Delete
+        </button>
+      </div>
+    </ng-template>
+  </app-data-table>
+
+  @if (totalPages() > 1) {
+    <nav class="mt-3">
+      <ul class="pagination justify-content-center">
+        @for (p of pages(); track p) {
+          <li class="page-item" [class.active]="page() === p">
+            <button class="page-link" (click)="goToPage(p)">{{ p }}</button>
+          </li>
+        }
+      </ul>
+    </nav>
+  }
+
+  @if (dialogTarget(); as target) {
+    <app-customer-dialog [target]="target" (saved)="onSaved()" (closed)="closeDialog()" />
+  }
+</div>

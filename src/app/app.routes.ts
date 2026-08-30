@@ -39,6 +39,24 @@ export const routes: Routes = [
         import('./features/medicines/pages/medicine-form/medicine-form').then((m) => m.MedicineForm),
       canActivate: [hasPermission('medicines.update')],
     },
+    {
+  path: 'categories',
+  loadComponent: () =>
+    import('./features/categories/pages/category-list/category-list').then((m) => m.CategoryList),
+  canActivate: [hasPermission('categories.read')],
+  },
+  {
+    path: 'suppliers',
+    loadComponent: () =>
+      import('./features/suppliers/pages/supplier-list/supplier-list').then((m) => m.SupplierList),
+    canActivate: [hasPermission('suppliers.read')],
+  },
+  {
+    path: 'customers',
+    loadComponent: () =>
+      import('./features/customers/pages/customer-list/customer-list').then((m) => m.CustomerList),
+    canActivate: [hasPermission('customers.read')],
+  },
   {
     path: 'forbidden',
     loadComponent: () =>

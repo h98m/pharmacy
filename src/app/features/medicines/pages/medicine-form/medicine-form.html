@@ -20,12 +20,22 @@
         <input type="text" class="form-control" formControlName="batchNumber" />
       </div>
       <div class="col-md-6">
-        <label class="form-label">Category ID</label>
-        <input type="text" class="form-control" formControlName="categoryId" />
+        <label class="form-label">Category</label>
+        <select class="form-select" formControlName="categoryId">
+          <option value="" disabled>Select a category</option>
+          @for (category of categories(); track category.id) {
+            <option [value]="category.id">{{ category.name }}</option>
+          }
+        </select>
       </div>
       <div class="col-md-6">
-        <label class="form-label">Supplier ID</label>
-        <input type="text" class="form-control" formControlName="supplierId" />
+        <label class="form-label">Supplier</label>
+        <select class="form-select" formControlName="supplierId">
+          <option value="" disabled>Select a supplier</option>
+          @for (supplier of suppliers(); track supplier.id) {
+            <option [value]="supplier.id">{{ supplier.name }}</option>
+          }
+        </select>
       </div>
       <div class="col-12">
         <label class="form-label">Description</label>
