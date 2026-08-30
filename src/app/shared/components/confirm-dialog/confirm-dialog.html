@@ -1,0 +1,15 @@
+@if (request(); as r) {
+  <div class="modal d-block" tabindex="-1" style="background: rgba(0, 0, 0, 0.5);">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+          <p class="mb-0">{{ r.message }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="respond(false)">Cancel</button>
+          <button type="button" class="btn btn-danger" (click)="respond(true)">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

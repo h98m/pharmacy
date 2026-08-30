@@ -21,6 +21,26 @@ export interface MedicineListParams {
   expiringInDays?: number;
 }
 
+export interface MedicineFormPayload {
+  name: string;
+  genericName: string;
+  barcode: string;
+  categoryId: string;
+  supplierId: string;
+  description: string;
+  price: number;
+  costPrice: number;
+  stockQuantity: number;
+  reorderLevel: number;
+  expiryDate: string;
+  batchNumber: string;
+  requiresPrescription: boolean;
+  isActive: boolean;
+}
+export interface StockAdjustPayload {
+  change: number;
+  reason: string;
+}
 @Injectable({ providedIn: 'root' })
 export class MedicinesService {
   private readonly http = inject(HttpClient);
@@ -36,5 +56,24 @@ export class MedicinesService {
     }
 
     return this.http.get<PaginatedResult<Medicine>>(this.baseUrl, { params: httpParams });
+  }
+
+  getOne(id: string): Observable<Medicine> {
+    return this.http.get<Medicine>(`${this.baseUrl}/${id}`);
+  }
+
+  create(payload: MedicineFormPayload): Observable<Medicine> {
+    return this.http.post<Medicine>(this.baseUrl, payload);
+  }
+
+  update(id: string, payload: MedicineFormPayload): Observable<Medicine> {
+    return this.http.put<Medicine>(`${this.baseUrl}/${id}`, payload);
+  }
+
+  adjustStock(id: string, payload: StockAdjustPayload): Observable<Medicine> {
+  return this.http.patch<Medicine>(`${this.baseUrl}/${id}/stock`, payload);
+  }
+  delete(id: string): Observable<void> {
+  return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

@@ -1,0 +1,19 @@
+<div class="mb-3">
+  @if (previewUrl(); as preview) {
+    <img [src]="preview" class="img-thumbnail mb-2 d-block" style="max-height: 150px;" />
+  }
+
+  <input type="file" class="form-control" [accept]="accept" (change)="onFileSelected($event)" />
+
+  @if (progress() !== null) {
+    <div class="progress mt-2">
+      <div class="progress-bar" [style.width.%]="progress()">{{ progress() }}%</div>
+    </div>
+  }
+
+  @if (selectedFile() && progress() === null) {
+    <button type="button" class="btn btn-secondary btn-sm mt-2" (click)="upload()">
+      Upload
+    </button>
+  }
+</div>
