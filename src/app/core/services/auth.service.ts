@@ -28,7 +28,12 @@ export class AuthService {
         .post<LoginResponse>(`${this.baseUrl}/register`, { fullName, email, password, phone: phone ?? '' })
         .pipe(tap((res) => this.storeSession(res)));
     }
-
+    
+    logout(): void {
+      localStorage.removeItem(ACCESS_TOKEN_KEY);
+      localStorage.removeItem(REFRESH_TOKEN_KEY);
+      this._user.set(null);
+    }
   private storeSession(res: LoginResponse): void {
     localStorage.setItem(ACCESS_TOKEN_KEY, res.accessToken);
     localStorage.setItem(REFRESH_TOKEN_KEY, res.refreshToken);

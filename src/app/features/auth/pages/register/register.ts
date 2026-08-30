@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 function passwordsMatchValidator(control: AbstractControl): ValidationErrors | null {
   const password = control.get('password')?.value;
@@ -19,11 +20,11 @@ function passwordsMatchValidator(control: AbstractControl): ValidationErrors | n
 export class Register {
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
+  private readonly notificationService = inject(NotificationService);
 
   readonly showPassword = signal(false);
   readonly showConfirmPassword = signal(false);
   readonly loading = signal(false);
-  readonly errorMessage = signal<string | null>(null);
   readonly registeredAs = signal<string | null>(null);
 
 readonly form = this.fb.group(
@@ -51,20 +52,20 @@ submit(): void {
     return;
   }
 
-  this.errorMessage.set(null);
   this.loading.set(true);
 
   const { fullName, email, password, phone } = this.form.getRawValue();
 
   this.authService.register(fullName!, email!, password!, phone || undefined).subscribe({
-    next: (res) => {
-      this.loading.set(false);
-      this.registeredAs.set(res.user.fullName);
-    },
-    error: (err) => {
-      this.loading.set(false);
-      this.errorMessage.set(err.error?.error?.message ?? 'Something went wrong. Please try again.');
-    },
+  next: (res) => {
+    this.loading.set(false);
+    this.registeredAs.set(res.user.fullName);
+    this.notificationService.success('Account created successfully.');
+  },
+  error: (err) => {
+    this.loading.set(false);
+    this.notificationService.error(err.error?.error?.message ?? 'Something went wrong. Please try again.');
+  },
   });
 }
 }
