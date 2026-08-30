@@ -1,14 +1,23 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
   <span class="navbar-brand">Pharmacy</span>
 
-  <div class="d-flex gap-3">
-    <a *appHasPermission="'dashboard.read'" routerLink="/dashboard" class="nav-link text-light">
-      Dashboard
-    </a>
-    <a *appHasPermission="'medicines.read'" routerLink="/medicines" class="nav-link text-light">
-      Medicines
-    </a>
-  </div>
+<div class="d-flex gap-3">
+  <a *appHasPermission="'dashboard.read'" routerLink="/dashboard" class="nav-link text-light">
+    Dashboard
+  </a>
+  <a *appHasPermission="'medicines.read'" routerLink="/medicines" class="nav-link text-light">
+    Medicines
+  </a>
+  <a *appHasPermission="'categories.read'" routerLink="/categories" class="nav-link text-light">
+    Categories
+  </a>
+  <a *appHasPermission="'suppliers.read'" routerLink="/suppliers" class="nav-link text-light">
+    Suppliers
+  </a>
+  <a *appHasPermission="'customers.read'" routerLink="/customers" class="nav-link text-light">
+    Customers
+  </a>
+</div>
 
   <div class="ms-auto d-flex align-items-center gap-3">
     @if (user(); as u) {
