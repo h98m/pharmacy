@@ -2,12 +2,6 @@
   <div class="card shadow-sm" style="max-width: 400px; width: 100%;">
     <div class="card-body p-4">
       <h1 class="h4 mb-4 text-center">Sign In</h1>
-
-      @if (loggedInAs()) {
-        <div class="alert alert-success" role="alert">
-          Signed in successfully. Welcome, {{ loggedInAs() }}.
-        </div>
-      } @else {
         <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
 
           <div class="mb-3">
@@ -59,7 +53,6 @@
           Don't have an account?
           <a routerLink="/auth/register">Create one</a>
         </p>
-      }
     </div>
   </div>
 </div>

@@ -3,6 +3,7 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { NotificationService } from '../../../../core/services/notification.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -12,13 +13,13 @@ import { NotificationService } from '../../../../core/services/notification.serv
   styleUrl : './login.scss'
 })
 export class Login {
+  private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly notificationService = inject(NotificationService);
 
   readonly showPassword = signal(false);
   readonly loading = signal(false);
-  readonly loggedInAs = signal<string | null>(null);
 
   readonly form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -39,10 +40,10 @@ export class Login {
     const { email, password } = this.form.getRawValue();
 
     this.authService.login(email!, password!).subscribe({
-    next: (res) => {
+    next: () => {
       this.loading.set(false);
-      this.loggedInAs.set(res.user.fullName);
       this.notificationService.success('Signed in successfully.');
+      this.router.navigate(['/dashboard']);
     },
     error: (err) => {
       this.loading.set(false);
