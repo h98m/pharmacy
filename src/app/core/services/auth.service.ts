@@ -52,7 +52,9 @@ export class AuthService {
         catchError(() => of(false)),
       );
     }
-
+    can(permission: string): boolean {
+      return this.user()?.permissions?.includes(permission) ?? false;
+    }
     get accessToken(): string | null {
       return localStorage.getItem(ACCESS_TOKEN_KEY);
     }
