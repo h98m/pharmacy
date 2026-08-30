@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { guestOnlyGuard } from './core/guards/guest-only.guard';
-import { homeRedirectGuard } from './core/guards/auth.guard';
+import { authGuard, homeRedirectGuard } from './core/guards/auth.guard';
 import { hasPermission } from './core/guards/permission.guard';
 
 export const routes: Routes = [
@@ -75,6 +75,11 @@ export const routes: Routes = [
       import('./features/roles/pages/permission-matrix/permission-matrix').then((m) => m.PermissionMatrix),
     canActivate: [hasPermission('roles.read')],
   },
+  {
+  path: 'auth/profile',
+  loadComponent: () => import('./features/auth/pages/profile/profile').then((m) => m.Profile),
+  canActivate: [authGuard],
+},
   {
     path: 'forbidden',
     loadComponent: () =>

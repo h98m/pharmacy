@@ -12,12 +12,16 @@ import { ConfirmDialog } from './shared/components/confirm-dialog/confirm-dialog
   styleUrl: './app.scss'
 })
 export class App {
-  private readonly router = inject(Router);
-  readonly isAuthPage = signal(this.router.url.startsWith('/auth'));
+private readonly router = inject(Router);
+readonly isAuthPage = signal(this.isLoginOrRegisterPage(this.router.url));
 
-  constructor() {
-    this.router.events
-      .pipe(filter((e) => e instanceof NavigationEnd))
-      .subscribe(() => this.isAuthPage.set(this.router.url.startsWith('/auth')));
-  }
+constructor() {
+  this.router.events
+    .pipe(filter((e) => e instanceof NavigationEnd))
+    .subscribe(() => this.isAuthPage.set(this.isLoginOrRegisterPage(this.router.url)));
+}
+
+private isLoginOrRegisterPage(url: string): boolean {
+  return url.startsWith('/auth/login') || url.startsWith('/auth/register');
+}
 }

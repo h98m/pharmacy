@@ -1,0 +1,91 @@
+<div class="container-fluid p-4" style="max-width: 600px;">
+  <h1 class="h3 mb-4">Profile</h1>
+
+  @if (user(); as u) {
+    <div class="card mb-4">
+      <div class="card-body">
+        <h2 class="h5 mb-3">Avatar</h2>
+        @if (u.avatarUrl) {
+          <img [src]="u.avatarUrl" class="img-thumbnail mb-3 d-block" style="max-height: 120px;" />
+        }
+        <app-file-upload [uploadUrl]="avatarUploadUrl" accept="image/png,image/jpeg,image/webp" (uploaded)="onAvatarUploaded()" />
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-body">
+        <h2 class="h5 mb-3">Personal Information</h2>
+        <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" novalidate>
+          <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="fullName"
+              [class.is-invalid]="profileForm.controls.fullName.invalid && profileForm.controls.fullName.touched"
+            />
+            @if (profileForm.controls.fullName.invalid && profileForm.controls.fullName.touched) {
+              <div class="invalid-feedback">Full name is required.</div>
+            }
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Phone</label>
+            <input type="tel" class="form-control" formControlName="phone" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" [value]="u.email" disabled />
+          </div>
+          <button type="submit" class="btn btn-primary" [disabled]="savingProfile()">
+            @if (savingProfile()) {
+              <span class="spinner-border spinner-border-sm me-2"></span>
+            }
+            Save Changes
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h2 class="h5 mb-3">Change Password</h2>
+        <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" novalidate>
+          <div class="mb-3">
+            <label class="form-label">Current Password</label>
+            <input type="password" class="form-control" formControlName="currentPassword" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">New Password</label>
+            <input
+              type="password"
+              class="form-control"
+              formControlName="newPassword"
+              [class.is-invalid]="passwordForm.controls.newPassword.invalid && passwordForm.controls.newPassword.touched"
+            />
+            @if (passwordForm.controls.newPassword.invalid && passwordForm.controls.newPassword.touched) {
+              <div class="invalid-feedback">Password must be at least 8 characters.</div>
+            }
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Confirm New Password</label>
+            <input
+              type="password"
+              class="form-control"
+              formControlName="confirmNewPassword"
+              [class.is-invalid]="passwordForm.errors?.['passwordsMismatch'] && passwordForm.controls.confirmNewPassword.touched"
+            />
+            @if (passwordForm.errors?.['passwordsMismatch'] && passwordForm.controls.confirmNewPassword.touched) {
+              <div class="invalid-feedback">Passwords do not match.</div>
+            }
+          </div>
+          <button type="submit" class="btn btn-primary" [disabled]="savingPassword()">
+            @if (savingPassword()) {
+              <span class="spinner-border spinner-border-sm me-2"></span>
+            }
+            Change Password
+          </button>
+        </form>
+      </div>
+    </div>
+  }
+</div>
