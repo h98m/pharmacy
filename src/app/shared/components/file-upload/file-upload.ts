@@ -5,6 +5,7 @@ import { HttpClient, HttpEventType } from '@angular/common/http';
   selector: 'app-file-upload',
   standalone: true,
   templateUrl: './file-upload.html',
+  styleUrl: './file-upload.scss',
 })
 export class FileUpload {
   private readonly http = inject(HttpClient);

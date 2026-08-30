@@ -43,7 +43,8 @@
         @if (cart().length === 0) {
           <p class="text-muted">No items yet. Search and add medicines above.</p>
         } @else {
-          <table class="table">
+          <div class="table-responsive">
+  <table class="table">
             <thead>
               <tr>
                 <th>Medicine</th>
@@ -77,6 +78,7 @@
               }
             </tbody>
           </table>
+          </div>
         }
       </div>
 
