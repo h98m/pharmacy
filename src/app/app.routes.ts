@@ -70,6 +70,12 @@ export const routes: Routes = [
   canActivate: [hasPermission('sales.read')],
 },
   {
+    path: 'roles',
+    loadComponent: () =>
+      import('./features/roles/pages/permission-matrix/permission-matrix').then((m) => m.PermissionMatrix),
+    canActivate: [hasPermission('roles.read')],
+  },
+  {
     path: 'forbidden',
     loadComponent: () =>
       import('./shared/components/forbidden-page/forbidden-page').then((m) => m.ForbiddenPage),
