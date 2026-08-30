@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -13,10 +14,10 @@ import { AuthService } from '../../../../core/services/auth.service';
 export class Login {
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
-  
+  private readonly notificationService = inject(NotificationService);
+
   readonly showPassword = signal(false);
   readonly loading = signal(false);
-  readonly errorMessage = signal<string | null>(null);
   readonly loggedInAs = signal<string | null>(null);
 
   readonly form = this.fb.group({
@@ -33,20 +34,20 @@ export class Login {
       return;
     }
 
-    this.errorMessage.set(null);
     this.loading.set(true);
 
     const { email, password } = this.form.getRawValue();
 
     this.authService.login(email!, password!).subscribe({
-      next: (res) => {
-        this.loading.set(false);
-        this.loggedInAs.set(res.user.fullName);
-      },
-      error: (err) => {
-        this.loading.set(false);
-        this.errorMessage.set(err.error?.error?.message ?? 'Something went wrong. Please try again.');
-      },
+    next: (res) => {
+      this.loading.set(false);
+      this.loggedInAs.set(res.user.fullName);
+      this.notificationService.success('Signed in successfully.');
+    },
+    error: (err) => {
+      this.loading.set(false);
+      this.notificationService.error(err.error?.error?.message ?? 'Something went wrong. Please try again.');
+    },
     });
   }
 }
