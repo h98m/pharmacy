@@ -1,0 +1,41 @@
+<div class="container-fluid p-4">
+  <h1 class="h3 mb-4">Medicines</h1>
+
+  <div class="row g-2 mb-3">
+    <div class="col-md-6">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search medicines..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange()"
+      />
+    </div>
+    <div class="col-md-6 d-flex align-items-center">
+      <div class="form-check">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="lowStockOnly"
+          [(ngModel)]="lowStockOnly"
+          (ngModelChange)="onFilterChange()"
+        />
+        <label class="form-check-label" for="lowStockOnly">Low stock only</label>
+      </div>
+    </div>
+  </div>
+
+  <app-data-table [columns]="columns" [rows]="medicines()" [loading]="loading()" />
+
+  @if (totalPages() > 1) {
+    <nav class="mt-3">
+      <ul class="pagination justify-content-center">
+        @for (p of pages(); track p) {
+          <li class="page-item" [class.active]="page() === p">
+            <button class="page-link" (click)="goToPage(p)">{{ p }}</button>
+          </li>
+        }
+      </ul>
+    </nav>
+  }
+</div>
